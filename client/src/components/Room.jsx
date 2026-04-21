@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Room({ roomState }) {
+function Room({ roomState, openRules }) {
   return (
     <div className="room-container glass-panel">
       <h2>ルームID: {roomState.id}</h2>
@@ -15,6 +15,7 @@ function Room({ roomState }) {
           </div>
         ))}
       </div>
+      <button className="styled-button secondary btn-rules" onClick={openRules} style={{marginTop: '20px'}}>遊び方・ルールを見る</button>
       <div className="spinner"></div>
     </div>
   );

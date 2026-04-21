@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Card from './Card';
 
-function Game({ roomState, timer, socket, myId, toggleMute, isMuted }) {
+function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }) {
   const [selectedCard, setSelectedCard] = useState(null);
 
   const me = roomState.players.find(p => p.id === myId);
@@ -55,9 +55,12 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted }) {
         <div className="timer">
           {renderPhaseText()} - <span className={timer <= 10 ? 'text-danger' : ''}>{Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}</span>
         </div>
-        <button className="mute-btn" onClick={toggleMute}>
-          {isMuted ? '🔇 ミュート中' : '🎙️ マイクON'}
-        </button>
+        <div className="top-actions" style={{display: 'flex', gap: '10px'}}>
+          <button className="mute-btn" onClick={openRules}>📖 ルール</button>
+          <button className="mute-btn" onClick={toggleMute}>
+            {isMuted ? '🔇 ミュート中' : '🎙️ マイクON'}
+          </button>
+        </div>
       </div>
 
       <div className="opponent-area">
