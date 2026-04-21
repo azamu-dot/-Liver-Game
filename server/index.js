@@ -227,6 +227,17 @@ io.on('connection', (socket) => {
     const room = rooms[roomId];
 
     if (room.players.length >= 2) {
+      const disconnectedPlayer = room.players.find(p => !p.connected);
+      if (disconnectedPlayer) {
+        disconnectedPlayer.id = socket.id;
+        disconnectedPlayer.connected = true;
+        disconnectedPlayer.name = playerName || disconnectedPlayer.name;
+        disconnectedPlayer.peerId = peerId;
+        socket.join(roomId);
+        socket.roomId = roomId;
+        broadcastRoomState(roomId);
+        return;
+      }
       socket.emit('error', 'Room is full');
       return;
     }
@@ -303,7 +314,13 @@ io.on('connection', (socket) => {
       const player = room.players.find(p => p.id === socket.id);
       if (player) {
         player.connected = false;
-        // Optionally handle game end on disconnect, or allow reconnect
+        if (room.phase === PHASE_WAITING || room.phase === PHASE_ENDED) {
+          room.players = room.players.filter(p => p.id !== socket.id);
+          if (room.players.length === 0) {
+            delete rooms[roomId];
+            return;
+          }
+        }
       }
       broadcastRoomState(roomId);
     }
