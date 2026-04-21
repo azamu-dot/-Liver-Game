@@ -51,7 +51,7 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted }) {
   return (
     <div className="game-container">
       <div className="top-bar">
-        <div className="turn-info">ターン {roomState.turn} / 14</div>
+        <div className="turn-info">ターン {roomState.turn}</div>
         <div className="timer">
           {renderPhaseText()} - <span className={timer <= 10 ? 'text-danger' : ''}>{Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}</span>
         </div>

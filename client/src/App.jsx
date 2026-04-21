@@ -153,12 +153,12 @@ function App() {
               <h2>ライバーゲームの遊び方</h2>
               <div className="rules-scroll">
                 <ul className="rules-list">
-                  <li><span className="rule-badge">基本</span> お互い50ポイントからスタート。全14ターン終了時にポイントが多い方の勝利。0ポイント以下になった時点で強制敗北です。</li>
+                  <li><span className="rule-badge">基本</span> お互い50ポイントからスタート。どちらかの手札がなくなった時点でポイントが多い方の勝利。0ポイント以下になった時点で強制敗北です。</li>
                   <li><span className="rule-badge">進行</span> 3分の議論フェーズ（スキップ可）の後、1分の提出フェーズで手札(1〜13＋ジョーカー)からカードを1枚提出します。</li>
                   <li><span className="rule-badge">勝敗</span> 大きい数字が勝ち。負けた方は「自分が出したカードの数字」分ポイントが減ります（勝者はダメージなし）。同じ数字は引き分けです。</li>
                   <li><span className="rule-badge special">特例① 高コスト吸収</span> 「11, 12, 13」で勝利した場合、相手にダメージを与えるだけでなく、そのダメージ分自分のポイントが回復します。</li>
                   <li><span className="rule-badge special">特例② 1の逆剋</span> 「1」は最弱ですが、「11, 12, 13」に対してのみ勝利します。この時、負けた側は50ポイント失います（勝者の回復はなし）。</li>
-                  <li><span className="rule-badge special">特例③ ジョーカー</span> 出せば無条件で勝利し、相手が出したカードを「自分の手札」として奪います。相手は通常通りダメージも受けます。ジョーカー同士は引き分けで捨て札になります。</li>
+                  <li><span className="rule-badge special">特例③ ジョーカー</span> 出せば無条件で勝利し、相手が出したカードを「自分の手札」として奪います。ただし相手にダメージは与えません。ジョーカー同士は引き分けで捨て札になります。</li>
                 </ul>
               </div>
               <button className="styled-button primary close-btn" onClick={() => setShowRules(false)}>閉じる</button>

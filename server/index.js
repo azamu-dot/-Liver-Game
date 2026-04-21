@@ -153,13 +153,13 @@ function resolveTurn(roomId) {
   } else if (c1 === 0) {
     // p1 Joker wins
     winner = 1;
-    p2Damage = c2;
+    p2Damage = 0;
     p1.hand.push(c2); // steal
     p1.usedCards.push(c1);
   } else if (c2 === 0) {
     // p2 Joker wins
     winner = 2;
-    p1Damage = c1;
+    p1Damage = 0;
     p2.hand.push(c1); // steal
     p2.usedCards.push(c2);
   } else if (c1 === 1 && [11, 12, 13].includes(c2)) {
@@ -207,7 +207,7 @@ function resolveTurn(roomId) {
     p2.selectedCard = null;
 
     // Check game end
-    if (p1.points <= 0 || p2.points <= 0 || (p1.hand.length === 0 && p2.hand.length === 0)) {
+    if (p1.points <= 0 || p2.points <= 0 || p1.hand.length === 0 || p2.hand.length === 0) {
       room.phase = PHASE_ENDED;
       broadcastRoomState(roomId);
     } else {
