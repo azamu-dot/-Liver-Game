@@ -124,6 +124,8 @@ function resolveTurn(roomId) {
 
   const p1 = room.players[0];
   const p2 = room.players[1];
+  const c1 = p1.selectedCard;
+  const c2 = p2.selectedCard;
 
   const v1 = c1 ? c1.value : null;
   const v2 = c2 ? c2.value : null;
