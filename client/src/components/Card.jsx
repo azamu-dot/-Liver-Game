@@ -8,7 +8,7 @@ function Card({ value, hidden, selected, disabled, animate, customCardBack }) {
   let illustration = null;
 
   if (isJoker) {
-    displayValue = 'JOKER';
+    displayValue = 'J';
     illustration = '/assets/card_joker.png';
   } else if (val === 1) {
     displayValue = 'A';
@@ -28,20 +28,31 @@ function Card({ value, hidden, selected, disabled, animate, customCardBack }) {
     <div className={`playing-card ${hidden ? 'hidden-card' : ''} ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''} ${animate ? 'animate-' + animate : ''}`}>
       {hidden ? (
         <div 
-          className="card-back" 
-          style={customCardBack ? { backgroundImage: `url(${customCardBack})`, backgroundSize: 'cover' } : { backgroundImage: `url(/assets/card_back_default.png)`, backgroundSize: 'cover' }}
+          className="card-back-content" 
+          style={customCardBack ? { backgroundImage: `url(${customCardBack})` } : { backgroundImage: `url(/assets/card_back_default.png)` }}
         ></div>
       ) : (
-        <div className={`card-face ${isJoker ? 'joker' : ''} ${illustration ? 'with-illustration' : ''}`}>
-          <span className="top-left">{displayValue}</span>
-          <div className="card-center">
+        <div className={`card-face-content ${isJoker ? 'joker' : ''} ${illustration ? 'is-special' : ''}`}>
+          <div className="card-corner top-left">
+            <span className="corner-val">{isJoker ? 'JOKER' : displayValue}</span>
+            {!isJoker && <span className="mini-suit">♠</span>}
+          </div>
+          
+          <div className="card-center-area">
             {illustration ? (
-              <img src={illustration} alt={displayValue} className="card-illustration" />
+              <img src={illustration} alt={displayValue} className="premium-illustration" />
             ) : (
-              <span className="suit">♠</span>
+              <div className="standard-face">
+                <span className="main-suit">♠</span>
+                <span className="main-value">{displayValue}</span>
+              </div>
             )}
           </div>
-          <span className="bottom-right">{displayValue}</span>
+
+          <div className="card-corner bottom-right">
+            <span className="corner-val">{isJoker ? 'JOKER' : displayValue}</span>
+            {!isJoker && <span className="mini-suit">♠</span>}
+          </div>
         </div>
       )}
     </div>
