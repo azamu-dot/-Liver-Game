@@ -21,8 +21,20 @@ function App() {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [customCardBack, setCustomCardBack] = useState(null);
   const myPeerRef = useRef(null);
   const callMadeRef = useRef(false);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCustomCardBack(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     const initWebRTC = async () => {
@@ -175,6 +187,26 @@ function App() {
             required
             className="styled-input"
           />
+          <div className="image-input-container glass-panel" style={{padding: '15px', marginTop: '0'}}>
+            <p className="image-input-label">カード裏面のデザインを選択（任意）</p>
+            <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+              <div className="custom-back-preview">
+                {customCardBack ? (
+                  <img src={customCardBack} alt="Preview" />
+                ) : (
+                  <div style={{fontSize: '0.7rem', color: 'var(--primary)', textAlign: 'center'}}>デフォルト</div>
+                )}
+              </div>
+              <label className="file-input-btn">
+                画像をアップロード
+                <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
+              </label>
+              {customCardBack && (
+                <button type="button" className="mute-btn" onClick={() => setCustomCardBack(null)} style={{fontSize: '0.7rem'}}>リセット</button>
+              )}
+            </div>
+          </div>
+
           <button type="submit" className="styled-button primary" disabled={!myPeerId}>
             {myPeerId ? '入室する' : 'VC準備中...'}
           </button>
@@ -200,6 +232,7 @@ function App() {
           toggleMute={toggleMute}
           isMuted={isMuted}
           openRules={() => setShowRules(true)}
+          customCardBack={customCardBack}
         />
       )}
       {showRules && renderRulesModal()}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Card from './Card';
 
-function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }) {
+function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules, customCardBack }) {
   const [selectedCard, setSelectedCard] = useState(null);
 
   const me = roomState.players.find(p => p.id === myId);
@@ -90,7 +90,7 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
 
         <div className="cards-in-hand">
           {opponent.hand.map((_, i) => (
-            <Card key={i} hidden={true} />
+            <Card key={i} hidden={true} customCardBack={customCardBack} />
           ))}
         </div>
       </div>
@@ -98,17 +98,17 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
       <div className="battle-field glass-panel">
         <div className="played-card-slot">
           {roomState.phase === 'reveal' && roomState.lastResult ? (
-            <Card value={roomState.lastResult.c2} animate="reveal" />
+            <Card value={roomState.lastResult.c2} animate="reveal" customCardBack={customCardBack} />
           ) : (
-            opponent.selectedCard !== null ? <Card hidden={true} /> : <div className="empty-slot">相手</div>
+            opponent.selectedCard !== null ? <Card hidden={true} customCardBack={customCardBack} /> : <div className="empty-slot">相手</div>
           )}
         </div>
         <div className="vs-text">VS</div>
         <div className="played-card-slot">
           {roomState.phase === 'reveal' && roomState.lastResult ? (
-            <Card value={roomState.lastResult.c1} animate="reveal" />
+            <Card value={roomState.lastResult.c1} animate="reveal" customCardBack={customCardBack} />
           ) : (
-            me.selectedCard !== null ? <Card value={me.selectedCard} /> : <div className="empty-slot">あなた</div>
+            me.selectedCard !== null ? <Card value={me.selectedCard} customCardBack={customCardBack} /> : <div className="empty-slot">あなた</div>
           )}
         </div>
       </div>
@@ -171,7 +171,7 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
         <div className="my-cards">
           {me.hand.map((card) => (
              <div key={card.id} onClick={() => handleCardClick(card)}>
-               <Card value={card} selected={selectedCard && selectedCard.id === card.id} disabled={roomState.phase !== 'submission' || me.selectedCard !== null} />
+               <Card value={card} selected={selectedCard && selectedCard.id === card.id} disabled={roomState.phase !== 'submission' || me.selectedCard !== null} customCardBack={customCardBack} />
              </div>
           ))}
         </div>
