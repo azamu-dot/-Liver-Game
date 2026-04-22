@@ -1,14 +1,15 @@
 import React from 'react';
 
 function Card({ value, hidden, selected, disabled, animate }) {
-  const isJoker = value === 0;
+  const val = typeof value === 'object' && value !== null ? value.value : value;
+  const isJoker = val === 0;
   
-  let displayValue = value;
+  let displayValue = val;
   if (isJoker) displayValue = 'JOKER';
-  else if (value === 1) displayValue = 'A';
-  else if (value === 11) displayValue = 'J';
-  else if (value === 12) displayValue = 'Q';
-  else if (value === 13) displayValue = 'K';
+  else if (val === 1) displayValue = 'A';
+  else if (val === 11) displayValue = 'J';
+  else if (val === 12) displayValue = 'Q';
+  else if (val === 13) displayValue = 'K';
 
   return (
     <div className={`playing-card ${hidden ? 'hidden-card' : ''} ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''} ${animate ? 'animate-' + animate : ''}`}>

@@ -43,6 +43,10 @@ function App() {
             setRemoteStream(rStream);
           });
         });
+
+        peer.on('error', (err) => {
+          console.error('PeerJS error:', err);
+        });
       } catch (err) {
         console.warn('Microphone access denied or error:', err);
       }
@@ -76,11 +80,17 @@ function App() {
       
       // Player 1 initiates the call
       if (me && opponent && opponent.peerId && roomState.players[0].id === me.id) {
+        console.log('Initiating call to:', opponent.peerId);
         callMadeRef.current = true;
         const call = myPeerRef.current.call(opponent.peerId, localStream);
         if (call) {
           call.on('stream', (rStream) => {
+            console.log('Received remote stream');
             setRemoteStream(rStream);
+          });
+          call.on('error', (err) => {
+            console.error('Call error:', err);
+            callMadeRef.current = false; // Allow retry
           });
         }
       }
@@ -141,7 +151,11 @@ function App() {
         <div className="setup-description glass-panel">
           <p className="highlight-text">【ルームIDについて】</p>
           <p>対戦相手と合流するための「合言葉」です。任意の好きな文字を入力してください。<br/>同じルームIDを入力したプレイヤー同士でマッチングしてゲームが始まります。</p>
-          <p style={{ marginTop: '10px', color: '#66fcf1', fontWeight: 'bold' }}>※ ボイスチャット機能を使うため、ブラウザのマイク許可を「ON」にしてください。</p>
+          <p style={{ marginTop: '10px', color: '#66fcf1', fontWeight: 'bold' }}>
+            ※ ボイスチャット機能を使うため、ブラウザのマイク許可を「ON」にしてください。<br/>
+            {!myPeerId && <span style={{color: '#ff4d4d'}}>（ボイスチャット準備中...）</span>}
+            {myPeerId && <span style={{color: '#4dff4d'}}>（ボイスチャット準備完了）</span>}
+          </p>
         </div>
 
         <form onSubmit={handleJoin} className="setup-form glass-panel">
@@ -161,7 +175,9 @@ function App() {
             required
             className="styled-input"
           />
-          <button type="submit" className="styled-button primary">入室する</button>
+          <button type="submit" className="styled-button primary" disabled={!myPeerId}>
+            {myPeerId ? '入室する' : 'VC準備中...'}
+          </button>
         </form>
 
         <button className="styled-button secondary btn-rules" onClick={() => setShowRules(true)}>遊び方・ルールを見る</button>

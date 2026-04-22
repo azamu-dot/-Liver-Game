@@ -19,6 +19,11 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
           <div>あなたのポイント: {me.points}</div>
           <div>相手のポイント: {opponent.points}</div>
         </div>
+        <div style={{marginTop: '30px'}}>
+          <button className="styled-button primary" onClick={() => socket.emit('restartGame')}>
+            もう一度遊ぶ
+          </button>
+        </div>
       </div>
     );
   }
@@ -39,6 +44,12 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
     socket.emit('skipDiscussion');
   };
 
+  const handleReset = () => {
+    if (window.confirm('ゲームを最初からやり直しますか？')) {
+      socket.emit('resetGame');
+    }
+  };
+
   const renderPhaseText = () => {
     switch (roomState.phase) {
       case 'discussion': return '議論フェーズ';
@@ -57,6 +68,7 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
         </div>
         <div className="top-actions" style={{display: 'flex', gap: '10px'}}>
           <button className="mute-btn" onClick={openRules}>📖 ルール</button>
+          <button className="mute-btn" onClick={handleReset}>🔄 リセット</button>
           <button className="mute-btn" onClick={toggleMute}>
             {isMuted ? '🔇 ミュート中' : '🎙️ マイクON'}
           </button>
@@ -121,13 +133,13 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
          } else if ((winner === 1 && isP1) || (winner === 2 && !isP1)) {
             resultTitle = "勝利！";
             resultColor = "text-win";
-            if (myCard === 0) detailText.push(`相手の「${opponentCard === 0 ? 'JOKER' : opponentCard}」を奪った！`);
+            if (myCard.value === 0) detailText.push(`相手の「${opponentCard.value === 0 ? 'JOKER' : opponentCard.value}」を奪った！`);
             if (opponentDamage > 0) detailText.push(`${opponentDamage}ダメージを与えた！`);
             if (myHeal > 0) detailText.push(`${myHeal}ポイントを吸収した！`);
          } else {
             resultTitle = "敗北…";
             resultColor = "text-lose";
-            if (opponentCard === 0) detailText.push(`相手に「${myCard === 0 ? 'JOKER' : myCard}」を奪われた！`);
+            if (opponentCard.value === 0) detailText.push(`相手に「${myCard.value === 0 ? 'JOKER' : myCard.value}」を奪われた！`);
             if (myDamage > 0) detailText.push(`${myDamage}ダメージを受けた…`);
          }
 
@@ -157,9 +169,9 @@ function Game({ roomState, timer, socket, myId, toggleMute, isMuted, openRules }
         </div>
         
         <div className="my-cards">
-          {me.hand.map((card, i) => (
-             <div key={i} onClick={() => handleCardClick(card)}>
-               <Card value={card} selected={selectedCard === card} disabled={roomState.phase !== 'submission' || me.selectedCard !== null} />
+          {me.hand.map((card) => (
+             <div key={card.id} onClick={() => handleCardClick(card)}>
+               <Card value={card} selected={selectedCard && selectedCard.id === card.id} disabled={roomState.phase !== 'submission' || me.selectedCard !== null} />
              </div>
           ))}
         </div>
